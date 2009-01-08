@@ -1,0 +1,25 @@
+has_hex_values
+
+Defines accessor methods for ActiveRecord model attributes that are
+stored in MySQL's binary format.
+
+USAGE
+
+class User < ActiveRecord::Base
+  has_hex_values :crypted_password, :salt
+
+  # Returns true if passwd matches the user's crypted_password and salt
+  def authenticate(passwd)
+    Digest::SHA1.hexdigest("#{passwd}--#{salt}") == crypted_password
+  end
+end
+
+@user = User.new
+@user.salt = Digest::SHA1.hexdigest("random salt")
+@user.crypted_password = Digest::SHA1.hexdigest("#{secret password}--#{salt}"
+@user.save
+@user.authenticate("secret password") # => true
+
+class File < ActiveRecord::Base
+  has_hex_values :md5
+end
